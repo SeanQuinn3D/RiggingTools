@@ -1,0 +1,24 @@
+# Get the names of the selected joints
+selection = cmds.ls(selection=True)
+if not selection:
+    cmds.warning("Please select at least one joint.")
+else:
+    for joint_name in selection:
+        # Create a locator at the position of the joint
+        locator_name = cmds.spaceLocator(name=joint_name + "_locator")[0]
+        cmds.matchTransform(locator_name, joint_name)
+
+        # Create a joint at the position of the locator
+        new_joint_name = cmds.joint(name=locator_name + "_joint", position=cmds.xform(locator_name, query=True, worldSpace=True, translation=True))
+
+        # Orient the joint to the locator
+        cmds.delete(cmds.orientConstraint(locator_name, new_joint_name))
+
+        # Match the joint's position to the locator
+        cmds.matchTransform(new_joint_name, locator_name)
+
+        # Unparent the joint from the locator
+        cmds.parent(new_joint_name, world=True)
+
+        # Delete the locator
+        cmds.delete(locator_name)
