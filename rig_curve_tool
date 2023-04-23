@@ -1,0 +1,167 @@
+import sys
+from PySide2 import QtCore, QtWidgets, QtGui
+from PySide2 import QtUiTools
+from shiboken2 import wrapInstance
+
+import maya.cmds as mc
+import maya.OpenMayaUI as omui
+
+
+def maya_main_window():
+
+    main_window_ptr = omui.MQtUtil.mainWindow()
+
+    if sys.version_info.major >= 3:
+        return wrapInstance(int(main_window_ptr), QtWidgets.QWidget)
+    else:
+        return wrapInstance(long(main_window_ptr), QtWidgets.QWidget)
+
+
+
+class CurveUI (QtWidgets.QDialog):
+
+    def __init__(self, parent=maya_main_window()):
+        super(CurveUI, self).__init__(parent)
+
+        self.setWindowTitle("Rig Curves")
+
+        self.init_ui()
+        self.create_layout()
+        self.create_connections()
+
+    def init_ui(self):
+        f = QtCore.QFile("//Mac/Home/Documents/maya/2022/scripts/RigCurves.ui")
+        f.open(QtCore.QFile.ReadOnly)
+
+
+
+        loader = QtUiTools.QUiLoader()
+        #self.window = loader.load(f)
+        self.ui = loader.load(f)
+
+        f.close()
+
+
+
+    def create_layout(self):
+        #self.ui.layout().setContentsMargins(6,3,6,3)
+        main_layout = QtWidgets.QVBoxLayout()
+        main_layout.addWidget(self.ui)
+        self.setLayout(main_layout)
+
+
+
+    def create_connections(self):
+
+        self.ui.Diamond.clicked.connect(self.createDimond)
+        self.ui.Plus.clicked.connect(self.createPlus)
+        self.ui.Arrow.clicked.connect(self.createArrow)
+        self.ui.DoubleArrow.clicked.connect(self.createDoubleArrow)
+
+        self.ui.Box.clicked.connect(self.createBox)
+        self.ui.D3Diamond.clicked.connect(self.create3Dimond)
+        self.ui.QuadArrow.clicked.connect(self.createQuadArrow)
+        self.ui.SharpDiamond.clicked.connect(self.createSharpDiamond)
+
+        self.ui.Red.clicked.connect(self.changeCurveRed)
+        self.ui.Green.clicked.connect(self.changeCurveGreen)
+        self.ui.Blue.clicked.connect(self.changeCurveBlue)
+        #self.ui.Green.clicked.connect()
+        #self.ui.Blue.clicked.connect()
+
+
+    def createDimond(self):
+        mc.curve(n='Dimond_01', d=1, p=[(-2.5, 0, 0), (0, 0, -5), (2.5, 0, 0), (0, 0, 5), (-2.5, 0, 0), ])
+
+    def createPlus(self):
+        mc.curve(n='Plus_01', d=1,
+                 p=[(-2.5, 0, -2.5), (-2.5, 0, -7.5), (2.5, 0, -7.5), (2.5, 0, -2.5), (7.5, 0, -2.5), (7.5, 0, 2.5),
+                    (2.5, 0, 2.5,), (2.5, 0, 7.5), (-2.5, 0, 7.5), (-2.5, 0, 2.5), (-7.5, 0, 2.5,), (-7.5, 0, -2.5),
+                    (-2.5, 0, -2.5), ])
+
+    def createArrow(self):
+        mc.curve(n='Arrow_01', d=1,
+                 p=[(-7.5, 0, -2.5), (0, 0, -10), (7.5, 0, -2.5), (2.5, 0, -2.5), (2.5, 0, 10), (-2.5, 0, 10),
+                    (-2.5, 0, -2.5), (-7.5, 0, -2.5), ])
+
+    def createDoubleArrow(self):
+        mc.curve(n='DoubleArrow_01', d=1,
+                 p=[(0, 0, -2.5), (-10, 0, -2.5), (-7.5, 0, -7.5), (-17.5, 0, 0), (-7.5, 0, 7.5), (-10, 0, 2.5),
+                    (0, 0, 2.5,), (10, 0, 2.5), (7.5, 0, 7.5), (17.5, 0, 0), (7.5, 0, -7.5), (10, 0, -2.5),
+                    (0, 0, -2.5), ])
+
+    def createBox(self):
+        mc.curve(n='Box_01', d=1,
+                 p=[(-5, 0, -5), (5, 0, -5), (5, 0, 5), (-5, 0, 5), (-5, 0, -5), (-5, 7.5, -5), (5, 7.5, -5),
+                    (5, 0, -5),
+                    (5, 0, 5), (5, 7.5, 5), (5, 7.5, -5), (5, 7.5, -5), (-5, 7.5, -5), (-5, 7.5, 5), (5, 7.5, 5),
+                    (-5, 7.5, 5), (-5, 0, 5), ])
+
+    def create3Dimond(self):
+        mc.curve(n='d_Dimond_01', d=1,
+                 p=[(-2.5, 2.5, 0), (0, 5, 0), (2.5, 2.5, 0), (2.5, -2.5, 0), (0, -5, 0), (-2.5, -2.5, 0),
+                    (-2.5, 2.5, 0),
+                    (-2.5, 2.5, -2.5), (0, 5, -2.5), (2.5, 2.5, -2.5), (2.5, -2.5, -2.5), (0, -5, -2.5),
+                    (-2.5, -2.5, -2.5),
+                    (-2.5, -2.5, 0), (-2.5, -2.5, -2.5), (-2.5, 2.5, -2.5), (0, 5, -2.5), (0, 5, 0), (2.5, 2.5, 0),
+                    (2.5, 2.5, -2.5), (2.5, -2.5, -2.5), (2.5, -2.5, 0), (0, -5, 0), (0, -5, -2.5), ])
+
+    def createQuadArrow(self):
+        mc.curve(n='qArrow_01', d=1,
+                 p=[(-2.5, 0, -2.5), (-2.5, 0, -7.5), (-5, 0, -7.5), (0, 0, -12.5), (5, 0, -7.5), (2.5, 0, -7.5),
+                    (2.5, 0, -2.5), (7.5, 0, -2.5), (7.5, 0, -5), (12.5, 0, 0), (7.5, 0, 5), (7.5, 0, 2.5),
+                    (2.5, 0, 2.5),
+                    (2.5, 0, 7.5), (5, 0, 7.5), (0, 0, 12.5), (-5, 0, 7.5), (-2.5, 0, 7.5), (-2.5, 0, 2.5),
+                    (-7.5, 0, 2.5),
+                    (-7.5, 0, 5), (-12.5, 0, 0), (-7.5, 0, -5), (-7.5, 0, -2.5), (-2.5, 0, -2.5), ])
+
+    def createSharpDiamond(self):
+        aDiamond = mc.curve(n='aDiamond_01', d=1,
+                            p=[(-2.5, 0, 0,), (0, 7.5, 0), (2.5, 0, 0), (0, -7.5, 0), (-2.5, 0, 0), ])
+        bDiamond = mc.curve(n='bDiamond_01', d=1,
+                            p=[(0, 0, 2.5), (0, 7.5, 0), (0, 0, -2.5), (0, -7.5, 0), (0, 0, 2.5), (0, 7.5, 0),
+                               (0, 0, -2.5),
+                               (0, -7.5, 0), (0, 0, 2.5), (0, 7.5, 0), ])
+        cDiamond = mc.curve(n='cDiamond_01', d=1,
+                            p=[(0, 0, -2.5), (-2.5, 0, 0), (0, 0, 2.5), (2.5, 0, 0), (0, 0, -2.5), ])
+        mc.attachCurve(aDiamond, bDiamond, cDiamond, rpo=False)
+        mc.delete(aDiamond, bDiamond, cDiamond)
+
+    def changeCurveColor(self, newColor):
+        sel = mc.ls(sl=True)
+        for myCurve in sel:
+            shape = mc.listRelatives(myCurve, s=True)
+            shape = shape[0]
+            mc.setAttr(shape + '.overrideEnabled', 1)
+            if newColor == 'blue':
+                mc.setAttr(shape + '.overrideColor', 6)
+            if newColor == 'red':
+                mc.setAttr(shape + '.overrideColor', 13)
+            if newColor == 'green':
+                mc.setAttr(shape + '.overrideColor', 14)
+
+    def changeCurveRed(self):
+        palette = self.ui.Red.palette()
+        palette.setColor(self.ui.Red.backgroundRole(), QtGui.QColor(255, 0, 0))
+        self.ui.Red.setPalette(palette)
+        self.changeCurveColor("red")
+
+    def changeCurveGreen(self):
+        palette = self.ui.Green.palette()
+        palette.setColor(self.ui.Green.backgroundRole(), QtGui.QColor(0, 255, 0))
+        self.ui.Green.setPalette(palette)
+        self.changeCurveColor("green")
+
+    def changeCurveBlue(self):
+        palette = self.ui.Blue.palette()
+        palette.setColor(self.ui.Blue.backgroundRole(), QtGui.QColor(0, 0, 255))
+        self.ui.Blue.setPalette(palette)
+        self.changeCurveColor("blue")
+
+def main():
+
+    ui = CurveUI()
+    ui.show()
+main()
+
+
