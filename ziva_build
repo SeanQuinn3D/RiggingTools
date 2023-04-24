@@ -1,0 +1,75 @@
+import maya.cmds as cmds
+import maya.mel as mel
+
+
+
+#cmds.file("//Mac/Home/Documents/Msim/ProjectSetup/mSim_06.mb", i=True)
+
+dirpath_asset = r'\\Mac\Home\Documents\Msim\\'
+
+def build():
+    cBuildscript = Buildscript(dirpath_asset)
+    cBuildscript.build()
+    return True
+
+def run_dev():
+    return True
+
+
+class Buildscript(object):
+
+    def __init__(self, dirpath_asset):
+
+        self.dirpath_asset = dirpath_asset
+
+        self.filepath_body = '%s/ProjectSetup/Body/Body_GEO_01.mb'%self.dirpath_asset
+
+        self.filepath_bones = '%s/ProjectSetup/Bones/Bone_GEO_01.mb'%self.dirpath_asset
+
+        self.bone_legs = 'Legs_B_GEO'
+        self.bone_arm = 'Arm_B_GEO'
+        self.bone_torso = 'Torso_B_GEO'
+
+        self.filepath_muscles = '%s/ProjectSetup/Muscles/Muscle_GEO_01.mb'%self.dirpath_asset
+
+        self.muscle_geo_arm = 'Arm_M_GEO'
+        self.muscle_geo_torso = 'Torso_M_GEO'
+        self.muscle_geo_leg = 'Leg_M_GEO'
+
+        self.filepath_rig = '%s/ProjectSetup/Rig/Body_Rig_01.mb'%self.dirpath_asset
+
+        self.joints = 'root_JNT'
+        self.controls = 'CTLs'
+        self.IK_handles = 'IK'
+
+        self.ziva_Rig = '%s/ZivaRig/Old_zivaRig.zBuilder'%self.dirpath_asset
+
+        pass
+
+
+    def build(self):
+
+        cmds.file(new=True, f=True)
+
+        cmds.file(self.filepath_bones, i=True)
+        cmds.file(self.filepath_muscles, i=True)
+        #cmds.file(self.filepath_body, i=True)
+        cmds.file(self.filepath_rig, i=True)
+
+        self.parent_modelToRig()
+
+
+        return True
+
+    def parent_modelToRig(self):
+        cmds.select('Legs_B_GEO', 'root_JNT', add=True)
+        cmds.bindSkin()
+
+        return True
+
+    def load_muscleNodes(self, dirpath, zSolver='zSolver1'):
+        cmds.file(self.ziva_Rig, i=True)
+
+
+
+build()
