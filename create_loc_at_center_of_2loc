@@ -1,0 +1,17 @@
+import maya.cmds as cmds
+
+# Get the names of the selected locators
+selection = cmds.ls(selection=True)
+if len(selection) != 2 or not all(cmds.nodeType(obj) == "transform" and cmds.listRelatives(obj, type="locator") for obj in selection):
+    cmds.warning("Please select two locators.")
+else:
+    # Get the positions of the two locators
+    pos1 = cmds.xform(selection[0], query=True, worldSpace=True, translation=True)
+    pos2 = cmds.xform(selection[1], query=True, worldSpace=True, translation=True)
+
+    # Calculate the midpoint between the two positions
+    mid_pos = [0.5 * (pos1[i] + pos2[i]) for i in range(3)]
+
+    # Create a locator at the midpoint
+    locator_name = cmds.spaceLocator(name="midpoint#")[0]
+    cmds.move(mid_pos[0], mid_pos[1], mid_pos[2], locator_name)
