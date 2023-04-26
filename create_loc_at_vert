@@ -1,0 +1,15 @@
+import maya.cmds as cmds
+
+# Get the name of the selected vertex
+selection = cmds.ls(selection=True, flatten=True)
+if not selection:
+    cmds.warning("Please select a vertex.")
+else:
+    vertex_name = selection[0]
+
+    # Get the position of the vertex
+    vertex_position = cmds.pointPosition(vertex_name, world=True)
+
+    # Create a locator at the position of the vertex
+    locator_name = cmds.spaceLocator(name=vertex_name + "_locator")[0]
+    cmds.move(vertex_position[0], vertex_position[1], vertex_position[2], locator_name, absolute=True)
