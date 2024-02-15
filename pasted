@@ -1,0 +1,5 @@
+# pasted__ 
+from pymel.core import ls
+for obj in ls(type='transform'):
+    if 'pasted__' in obj.name():
+        obj.rename(obj.name().replace('pasted__', ''))
