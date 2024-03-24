@@ -69,6 +69,10 @@ def changeCurveColor(newColor):
             mc.setAttr(shape + '.overrideColor', 13)
         if newColor == 'green':
             mc.setAttr(shape + '.overrideColor', 14)
+        if newColor == 'lightBlue':
+            mc.setAttr(shape + '.overrideColor', 18)
+        if newColor == 'yellow':
+            mc.setAttr(shape + '.overrideColor', 17)
 
 
 def createWindow(wind):
@@ -88,6 +92,8 @@ def createWindow(wind):
     mc.button(label='Blue', bgc=(0, 0, 1), c='changeCurveColor("blue")')
     mc.button(label='Red', bgc=(1, 0, 0), c='changeCurveColor("red")')
     mc.button(label='Green', bgc=(0, 1, 0), c='changeCurveColor("green")')
+    mc.button(label='lightBlue', bgc=(0, 1, 1), c='changeCurveColor("lightBlue")')
+    mc.button(label='yellow', bgc=(1, 1, 0), c='changeCurveColor("yellow")')
     mc.showWindow(wind)
 
 
